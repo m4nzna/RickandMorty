@@ -9,22 +9,35 @@ class CharacterItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-alignment: Alignment.center,
+alignment: Alignment.topCenter,
       children: [
-        Card(
-          child:
+
         Column(
           children: [
-            SizedBox(height: 100),
-            Text(character.name),
-            Text(character.species.name),
+            SizedBox(height: 20),
+            SizedBox(
+              width: 150,
+
+              child:
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                SizedBox(height: 80),
+                    Text(character.name),
+                    Text(character.species.name),
 
 
+                  ],
+                ),
+              ),
+            ),
+              ),
           ],
         ),
-          ),
-
-          ClipOval(
+        ClipOval(
 
           child: Image.network(
             character.image,
@@ -45,6 +58,7 @@ alignment: Alignment.center,
             },
           ),
         ),
+
 
       ],
     );
