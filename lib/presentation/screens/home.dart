@@ -13,10 +13,24 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late final ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
     context.read<CharacterBloc>().add(CharacterRequested());
+  }
+
+  void _onScroll() {
+    print(_scrollController.position.maxScrollExtent);
+
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      print('cargar mas');
+      context.read<CharacterBloc>().add(CharacterLoadMore());
+    }
   }
 
   @override
@@ -57,15 +71,17 @@ class _HomeState extends State<Home> {
 
                       Expanded(
                         child: GridView.builder(
+                          controller: _scrollController,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             mainAxisSpacing: 8.0,
                             crossAxisSpacing: 8.0,
                           ),
                           padding: EdgeInsets.all(8.0),
-                          itemCount: state.characters!.length,
+                          itemCount: state.characters.length,
                           itemBuilder: (context, index) {
-                            return CharacterItem(character: state.characters![index]);
+                            return CharacterItem(
+                                character: state.characters[index]);
                           },
                         ),
                       );

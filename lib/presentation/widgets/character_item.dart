@@ -3,8 +3,8 @@ import 'package:rick_and_morty/models/character_model.dart';
 
 class CharacterItem extends StatelessWidget {
   const CharacterItem({super.key, required this.character});
-
   final Result character;
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +26,10 @@ alignment: Alignment.topCenter,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 SizedBox(height: 80),
-                    Text(character.name),
-                    Text(character.species.name),
+                    Text(character.name, overflow: TextOverflow.ellipsis,
+                      maxLines: 1,),
+                    Text(character.species, overflow: TextOverflow.ellipsis,
+                      maxLines: 1,),
 
 
                   ],
@@ -55,6 +57,9 @@ alignment: Alignment.topCenter,
                       : null,
                 ),
               );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(Icons.person);
             },
           ),
         ),

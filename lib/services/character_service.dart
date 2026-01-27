@@ -6,10 +6,10 @@ class CharacterService {
     BaseOptions(baseUrl: 'https://rickandmortyapi.com/api'),
   );
 
-  Future<Character> getCharacters() async {
+  Future<Character> getCharacters({int page = 1}) async {
     try {
-      final response = await dio.get('/character');
-      print(response);
+      final response = await dio.get(
+          '/character', queryParameters: {'page': page});
 
       return Character.fromJson(
         response.data as Map<String, dynamic>,

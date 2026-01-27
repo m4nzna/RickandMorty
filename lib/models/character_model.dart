@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 Character characterFromJson(String str) => Character.fromJson(json.decode(str));
@@ -10,19 +8,10 @@ class Character {
   Info info;
   List<Result> results;
 
-  Character({
-    required this.info,
-    required this.results,
-  });
+  Character({required this.info, required this.results});
 
-  Character copyWith({
-    Info? info,
-    List<Result>? results,
-  }) =>
-      Character(
-        info: info ?? this.info,
-        results: results ?? this.results,
-      );
+  Character copyWith({Info? info, List<Result>? results}) =>
+      Character(info: info ?? this.info, results: results ?? this.results);
 
   factory Character.fromJson(Map<String, dynamic> json) => Character(
     info: Info.fromJson(json["info"]),
@@ -38,28 +27,17 @@ class Character {
 class Info {
   int count;
   int pages;
-  String next;
-  dynamic prev;
+  String? next;
+  String? prev;
 
-  Info({
-    required this.count,
-    required this.pages,
-    required this.next,
-    required this.prev,
-  });
+  Info({required this.count, required this.pages, this.next, this.prev});
 
-  Info copyWith({
-    int? count,
-    int? pages,
-    String? next,
-    dynamic prev,
-  }) =>
-      Info(
-        count: count ?? this.count,
-        pages: pages ?? this.pages,
-        next: next ?? this.next,
-        prev: prev ?? this.prev,
-      );
+  Info copyWith({int? count, int? pages, String? next, String? prev}) => Info(
+    count: count ?? this.count,
+    pages: pages ?? this.pages,
+    next: next ?? this.next,
+    prev: prev ?? this.prev,
+  );
 
   factory Info.fromJson(Map<String, dynamic> json) => Info(
     count: json["count"],
@@ -79,10 +57,10 @@ class Info {
 class Result {
   int id;
   String name;
-  Status status;
-  Species species;
+  String status;
+  String species;
   String type;
-  Gender gender;
+  String gender;
   Location origin;
   Location location;
   String image;
@@ -108,39 +86,38 @@ class Result {
   Result copyWith({
     int? id,
     String? name,
-    Status? status,
-    Species? species,
+    String? status,
+    String? species,
     String? type,
-    Gender? gender,
+    String? gender,
     Location? origin,
     Location? location,
     String? image,
     List<String>? episode,
     String? url,
     DateTime? created,
-  }) =>
-      Result(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        status: status ?? this.status,
-        species: species ?? this.species,
-        type: type ?? this.type,
-        gender: gender ?? this.gender,
-        origin: origin ?? this.origin,
-        location: location ?? this.location,
-        image: image ?? this.image,
-        episode: episode ?? this.episode,
-        url: url ?? this.url,
-        created: created ?? this.created,
-      );
+  }) => Result(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    status: status ?? this.status,
+    species: species ?? this.species,
+    type: type ?? this.type,
+    gender: gender ?? this.gender,
+    origin: origin ?? this.origin,
+    location: location ?? this.location,
+    image: image ?? this.image,
+    episode: episode ?? this.episode,
+    url: url ?? this.url,
+    created: created ?? this.created,
+  );
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["id"],
     name: json["name"],
-    status: statusValues.map[json["status"]]!,
-    species: speciesValues.map[json["species"]]!,
+    status: json["status"]!,
+    species: json["species"],
     type: json["type"],
-    gender: genderValues.map[json["gender"]]!,
+    gender: json["gender"]!,
     origin: Location.fromJson(json["origin"]),
     location: Location.fromJson(json["location"]),
     image: json["image"],
@@ -152,10 +129,10 @@ class Result {
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "status": statusValues.reverse[status],
-    "species": speciesValues.reverse[species],
+    "status": status,
+    "species": species,
     "type": type,
-    "gender": genderValues.reverse[gender],
+    "gender": gender,
     "origin": origin.toJson(),
     "location": location.toJson(),
     "image": image,
@@ -165,68 +142,21 @@ class Result {
   };
 }
 
-enum Gender {
-  FEMALE,
-  MALE,
-  UNKNOWN
-}
-
-final genderValues = EnumValues({
-  "Female": Gender.FEMALE,
-  "Male": Gender.MALE,
-  "unknown": Gender.UNKNOWN
-});
-
 class Location {
   String name;
   String url;
 
-  Location({
-    required this.name,
-    required this.url,
-  });
+  Location({required this.name, required this.url});
 
-  Location copyWith({
-    String? name,
-    String? url,
-  }) =>
-      Location(
-        name: name ?? this.name,
-        url: url ?? this.url,
-      );
+  Location copyWith({String? name, String? url}) =>
+      Location(name: name ?? this.name, url: url ?? this.url);
 
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
-    name: json["name"],
-    url: json["url"],
-  );
+  factory Location.fromJson(Map<String, dynamic> json) =>
+      Location(name: json["name"], url: json["url"]);
 
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "url": url,
-  };
+  Map<String, dynamic> toJson() => {"name": name, "url": url};
 }
 
-enum Species {
-  ALIEN,
-  HUMAN
-}
-
-final speciesValues = EnumValues({
-  "Alien": Species.ALIEN,
-  "Human": Species.HUMAN
-});
-
-enum Status {
-  ALIVE,
-  DEAD,
-  UNKNOWN
-}
-
-final statusValues = EnumValues({
-  "Alive": Status.ALIVE,
-  "Dead": Status.DEAD,
-  "unknown": Status.UNKNOWN
-});
 
 class EnumValues<T> {
   Map<String, T> map;

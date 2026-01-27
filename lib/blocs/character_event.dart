@@ -10,3 +10,5 @@ class CharacterRequested extends CharacterEvent{
 
 
 }
+
+class CharacterLoadMore extends CharacterEvent {}
