@@ -13,7 +13,7 @@ final class CharacterInitial extends CharacterState {}
 final class CharacterLoading extends CharacterState {}
 
 final class CharacterSuccess extends CharacterState {
-  final List<Character>? characters;
+  final List<Result>? characters;
   CharacterSuccess(this.characters);
 
   @override

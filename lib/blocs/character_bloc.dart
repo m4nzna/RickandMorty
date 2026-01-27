@@ -1,10 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rick_and_morty/models/character_model.dart';
-import 'package:rick_and_morty/models/character_model.dart';
-import 'package:rick_and_morty/models/character_model.dart';
-import 'package:rick_and_morty/models/character_model.dart';
-import 'package:rick_and_morty/models/character_model.dart';
 
 import '../services/character_service.dart';
 
@@ -19,9 +15,9 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       emit(CharacterLoading());
       try{
         final character = await characterService.getCharacters();
-        emit(CharacterSuccess(character!));
+        emit(CharacterSuccess(character.results));
       }catch(e){
-        emit(CharacterFailure('Error fetching cards: ${e.toString()}'));
+        emit(CharacterFailure('Error fetching characters: ${e.toString()}'));
       }
     });
   }

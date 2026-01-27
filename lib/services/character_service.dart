@@ -6,20 +6,23 @@ class CharacterService {
     BaseOptions(baseUrl: 'https://rickandmortyapi.com/api'),
   );
 
-  Future<List<Character>>? getCharacters() async {
-    try{
+  Future<Character> getCharacters() async {
+    try {
       final response = await dio.get('/character');
-      final data = response.data;
-      print(response.data);
-      return (data['results'] as List).map((e) => Character.fromJson(e)).toList();
-    } on DioException catch (e){
+      print(response);
+
+      return Character.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+    } on DioException catch (e) {
       final errorMessage =
-          e.response?.data['message'] ??
-              e.response?.data['error'] ??
+          e.response?.data?['message'] ??
+              e.response?.data?['error'] ??
               'Error desconocido del servidor';
       throw Exception(errorMessage);
-    }catch (e){
+    } catch (e) {
       throw Exception('Error inesperado: ${e.toString()}');
     }
   }
+
 }
