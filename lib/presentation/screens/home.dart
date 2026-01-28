@@ -20,13 +20,26 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final ScrollController _scrollController;
+  late final TextEditingController _textController;
+
+  final SearchController _searchController = SearchController();
+  static const List<String> _sugestionsSpecies = [
+    'Human',
+    'Alien',
+  ];
+  static const List<String> _sugestionsType = [
+    'Superhuman',
+    'Parasite',
+    'Human with antennae',
+  ];
+
 
   Timer? _debounce;
 
   void onSearchNameChanged(String value) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(const Duration(milliseconds: 700), () {
       context.read<CharacterBloc>().add(CharacterRequested(name: value));
     });
   }
@@ -34,22 +47,25 @@ class _HomeState extends State<Home> {
   void onSearchSpeciesChanged(String value) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(const Duration(milliseconds: 700), () {
       context.read<CharacterBloc>().add(CharacterRequested(species: value));
+      Navigator.pop(context);
     });
   }
 
   void onSearchTypeChanged(String value) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(const Duration(milliseconds: 700), () {
       context.read<CharacterBloc>().add(CharacterRequested(type: value));
+      Navigator.pop(context);
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _textController = TextEditingController();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
     context.read<CharacterBloc>().add(CharacterRequested());
@@ -71,91 +87,149 @@ class _HomeState extends State<Home> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text('Rick and Morty'), actions: []),
       drawer: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         child: Stack(
           children: [
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
                       'FIND BY...',
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: Theme.of(context).textTheme.titleLarge!.apply(
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
                     ),
                     SizedBox(height: 16),
-                    DropdownMenu(
-                      label: Text('Status'),
-                      onSelected: (StatusCharacter? value) {
-                        context.read<CharacterBloc>().add(
-                          CharacterRequested(status: value?.name ?? ''),
-                        );
-                        Navigator.pop(context);
-                      },
-                      dropdownMenuEntries: [
-                        DropdownMenuEntry(
-                          value: StatusCharacter.alive,
-                          label: 'Alive',
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+
+                      child: DropdownMenu(
+                        label: Text('Status'),
+                        width: double.infinity,
+                        menuStyle: MenuStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).colorScheme.surface,
+                          ),
                         ),
-                        DropdownMenuEntry(
-                          value: StatusCharacter.dead,
-                          label: 'Dead',
+                        onSelected: (StatusCharacter? value) {
+                          context.read<CharacterBloc>().add(
+                            CharacterRequested(status: value?.name ?? ''),
+                          );
+                          Navigator.pop(context);
+                        },
+                        dropdownMenuEntries: [
+                          DropdownMenuEntry(
+                            value: StatusCharacter.alive,
+                            label: 'Alive',
+                          ),
+                          DropdownMenuEntry(
+                            value: StatusCharacter.dead,
+                            label: 'Dead',
+                          ),
+                          DropdownMenuEntry(
+                            value: StatusCharacter.unknown,
+                            label: 'Unknown',
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SearchBar(
+                            hintText: 'Species',
+
+                            onChanged: (value) {
+                              onSearchSpeciesChanged(value.toLowerCase());
+
+                            },
+                          ),
                         ),
-                        DropdownMenuEntry(
-                          value: StatusCharacter.unknown,
-                          label: 'Unknown',
-                        ),
+                        Tooltip(
+                          message: "Species example: Human, Alien",
+
+                          child: IconButton(
+                            icon: Icon(Icons.info, color: Theme.of(context).colorScheme.surface),
+                            onPressed: () {
+
+                            },
+                          ),
+                        )
                       ],
                     ),
                     SizedBox(height: 16),
-                    SearchBar(
-                      hintText: 'Species',
-                      leading: Icon(Icons.pets),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SearchBar(
+                            hintText: 'Type',
+                            onChanged: (value) {
+                              onSearchTypeChanged(value.toLowerCase());
 
-                      onChanged: (value) {
-                        onSearchSpeciesChanged(value.toLowerCase());
-                        Navigator.pop(context);
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    SearchBar(
-                      hintText: 'Type',
-                      leading: Icon(Icons.supervisor_account),
-                      onChanged: (value) {
-                        onSearchTypeChanged(value.toLowerCase());
-                        Navigator.pop(context);
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    DropdownMenu(
-                      label: Text('Gender'),
+                            },
+                          ),
 
-                      onSelected: (GenderCharacter? value) {
-                        context.read<CharacterBloc>().add(
-                          CharacterRequested(gender: value?.name ?? ''),
-                        );
-                        Navigator.pop(context);
-                      },
-                      dropdownMenuEntries: [
-                        DropdownMenuEntry(
-                          value: GenderCharacter.female,
-                          label: 'Female',
                         ),
-                        DropdownMenuEntry(
-                          value: GenderCharacter.male,
-                          label: 'Male',
-                        ),
-                        DropdownMenuEntry(
-                          value: GenderCharacter.genderless,
-                          label: 'Genderless',
-                        ),
+                        Tooltip(
+                          message: "Type example: Parasite, Human with antennae, Superhuman",
 
-                        DropdownMenuEntry(
-                          value: GenderCharacter.unknown,
-                          label: 'Unknown',
-                        ),
+                          child: IconButton(
+                            icon: Icon(Icons.info, color: Theme.of(context).colorScheme.surface),
+                            onPressed: () {
+
+                            },
+                          ),
+                        )
                       ],
+                    ),
+                    SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      child: DropdownMenu(
+                        label: Text('Gender'),
+                        width: double.infinity,
+                        menuStyle: MenuStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                        onSelected: (GenderCharacter? value) {
+                          context.read<CharacterBloc>().add(
+                            CharacterRequested(gender: value?.name ?? ''),
+                          );
+                          Navigator.pop(context);
+                        },
+                        dropdownMenuEntries: [
+                          DropdownMenuEntry(
+                            value: GenderCharacter.female,
+                            label: 'Female',
+                          ),
+                          DropdownMenuEntry(
+                            value: GenderCharacter.male,
+                            label: 'Male',
+                          ),
+                          DropdownMenuEntry(
+                            value: GenderCharacter.genderless,
+                            label: 'Genderless',
+                          ),
+
+                          DropdownMenuEntry(
+                            value: GenderCharacter.unknown,
+                            label: 'Unknown',
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -173,22 +247,35 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text(
-                context.select((CharacterBloc bloc) {
-                  final state = bloc.state;
-                  if (state is CharacterSuccess) {
-                    return 'Total Characters: ${state.totalCount}';
-                  }
-                  return 'Total Characters: 0';
-                }),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: SearchBar(
+                      controller: _textController,
+                      leading: Icon(Icons.search),
+                      hintText: 'Character',
+                      onChanged: (value) {
+                        onSearchNameChanged(value);
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Text(
+                    context.select((CharacterBloc bloc) {
+                      final state = bloc.state;
+                      if (state is CharacterSuccess) {
+                        return '${state.totalCount}';
+                      }
+                      return '0';
+                    }),
+                    style: Theme.of(context).textTheme.titleMedium!.apply(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                ],
               ),
-              SearchBar(
-                leading: Icon(Icons.search),
-                hintText: 'Character',
-                onChanged: (value) {
-                  onSearchNameChanged(value);
-                },
-              ),
+
               SizedBox(height: 16),
               BlocBuilder<CharacterBloc, CharacterState>(
                 builder: (context, state) {
@@ -219,23 +306,28 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Lottie.asset(
-                              'assets/error.json',
-                              height: 200,
-                              width: 200,
-                            ),
-
-
+                          state.message.contains('There is nothing here')
+                              ? Lottie.asset(
+                                  'assets/error.json',
+                                  height: 200,
+                                  width: 200,
+                                )
+                              : Lottie.asset(
+                                  'assets/error2.json',
+                                  height: 200,
+                                  width: 200,
+                                ),
 
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: OutlinedButton(
                               onPressed: () {
+                                _textController.clear();
                                 context.read<CharacterBloc>().add(
                                   CharacterRequested(),
                                 );
                               },
-                              child: Text('Reintentar'),
+                              child: Text('Try again...'),
                             ),
                           ),
                         ],
