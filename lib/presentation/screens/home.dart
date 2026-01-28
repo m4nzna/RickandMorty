@@ -22,18 +22,6 @@ class _HomeState extends State<Home> {
   late final ScrollController _scrollController;
   late final TextEditingController _textController;
 
-  final SearchController _searchController = SearchController();
-  static const List<String> _sugestionsSpecies = [
-    'Human',
-    'Alien',
-  ];
-  static const List<String> _sugestionsType = [
-    'Superhuman',
-    'Parasite',
-    'Human with antennae',
-  ];
-
-
   Timer? _debounce;
 
   void onSearchNameChanged(String value) {

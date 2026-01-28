@@ -50,7 +50,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
           ...response.results,
         ], response.info.next == null, nextPage, totalCount: state.characters.length));
       } catch (e) {
-        print(e);
         emit(CharacterFailure('Error fetching characters: ${e.toString()}'));
       }finally{
         isFetching = false;

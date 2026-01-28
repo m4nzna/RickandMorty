@@ -4,7 +4,6 @@ import 'package:rick_and_morty/presentation/screens/home.dart';
 import 'package:rick_and_morty/services/character_service.dart';
 
 import 'blocs/character_bloc.dart';
-import 'config/theme/app_theme.dart';
 import 'config/theme/theme.dart';
 import 'config/theme/util.dart';
 
