@@ -1,16 +1,31 @@
 # rick_and_morty
 
-A new Flutter project.
+RickAndMorty Api
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Character view
 
-A few resources to get you started if this is your first Flutter project:
+- Search filters
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- State management with BLoC
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Communication with a backend REST API using Dio
+
+
+## Installation and Execution
+
+### 1. Clon the repository
+
+```bash
+https://github.com/m4nzna/RickandMorty.git
+
+### 2. Install dependencies
+
+flutter pub get
+
+### 3. Run the app
+
+flutter run
+
+*Make sure you have an emulator running or a connected physical device.
