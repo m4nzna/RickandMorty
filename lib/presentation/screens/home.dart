@@ -25,6 +25,7 @@ class _HomeState extends State<Home> {
   Timer? _debounce;
 
   void onSearchNameChanged(String value) {
+
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 700), () {
