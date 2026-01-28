@@ -19,6 +19,10 @@ class CharacterItem extends StatelessWidget {
               width: 150,
 
               child: Card(
+                color: Theme
+                    .of(context)
+                    .colorScheme
+                    .tertiary,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -29,11 +33,14 @@ class CharacterItem extends StatelessWidget {
                         character.name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                      ),
-                      Text(
-                        character.species,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .titleMedium!
+                            .apply(color: Theme
+                            .of(context)
+                            .colorScheme
+                            .surface),
                       ),
                     ],
                   ),

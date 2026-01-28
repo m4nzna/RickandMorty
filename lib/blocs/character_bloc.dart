@@ -9,39 +9,62 @@ part 'character_state.dart';
 
 class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final CharacterService characterService;
+  String? _currentSearch;
+  String? _currentStatus;
+  String? _currentSpecies;
+  String? _currentType;
+  String? _currentGender;
+  bool isFetching = false;
+
 
   CharacterBloc(this.characterService) : super(CharacterInitial()) {
     on<CharacterRequested>((event, emit) async{
       emit(CharacterLoading());
+      _currentSearch = event.name;
+      _currentStatus = event.status;
+      _currentSpecies = event.species;
+      _currentType = event.type;
+      _currentGender = event.gender;
       try{
-        final response = await characterService.getCharacters(page: 1);
-        emit(CharacterSuccess(response.results, response.info.next == null, 1));
+        final response = await characterService.getCharacters(page: 1,
+            name: _currentSearch,
+            status: _currentStatus,
+            species: _currentSpecies,
+            type: _currentType,
+            gender: _currentGender);
+        emit(CharacterSuccess(response.results, response.info.next == null, 1,
+            totalCount: response.results.length));
       }catch(e){
         emit(CharacterFailure('Error fetching characters: ${e.toString()}'));
       }
     });
 
+
     on<CharacterLoadMore>((event, emit) async {
-      print('CharacterLOadrMore');
-      //emit(CharacterLoading());
+      if (isFetching) return;
       final state = this.state;
-      print('1');
 
       if (state is! CharacterSuccess || state.hasReachedMax) return;
-      print('2');
+      isFetching = true;
 
       final nextPage = state.currentPage + 1;
-      print(nextPage);
       try {
-        final response = await characterService.getCharacters(page: nextPage);
-        print(response);
+        final response = await characterService.getCharacters(page: nextPage,
+            name: _currentSearch,
+            status: _currentStatus,
+            species: _currentSpecies,
+            type: _currentType,
+            gender: _currentGender);
         emit(CharacterSuccess([
           ...state.characters,
           ...response.results,
-        ], response.info.next == null, nextPage));
+        ], response.info.next == null, nextPage,
+            totalCount: state.characters.length));
       } catch (e) {
         print(e);
         emit(CharacterFailure('Error fetching characters: ${e.toString()}'));
+      } finally {
+        isFetching = false;
       }
     });
 
