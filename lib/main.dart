@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) { {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
+  @overridee
+  Widget build(BuildContext context) final brightness = View.of(context).platformDispatcher.platformBrightness;
     TextTheme textTheme = createTextTheme(context, "Abel", "Lilita One");
-    MaterialTheme theme = MaterialTheme(textTheme)return MaterialApp(
+    MaterialTheme theme = MaterialTheme(textTheme);
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Rick and Morty',
       initialRoute: 'home',
