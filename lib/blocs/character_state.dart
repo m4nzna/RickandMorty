@@ -18,12 +18,10 @@ final class CharacterSuccess extends CharacterState {
   final int currentPage;
   final int? totalCount;
 
-  CharacterSuccess(this.characters, this.hasReachedMax, this.currentPage,
-      {this.totalCount = 0});
+  CharacterSuccess(this.characters, this.hasReachedMax, this.currentPage, {this.totalCount = 0});
 
   @override
-  List<Object?> get props =>
-      [characters, hasReachedMax, currentPage, totalCount];
+  List<Object?> get props => [characters, hasReachedMax, currentPage, totalCount];
 }
 
 final class CharacterFailure extends CharacterState {

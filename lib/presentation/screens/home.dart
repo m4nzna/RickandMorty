@@ -220,10 +220,12 @@ class _HomeState extends State<Home> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Lottie.asset(
-                            'assets/error.json',
-                            height: 200,
-                            width: 200,
-                          ),
+                              'assets/error.json',
+                              height: 200,
+                              width: 200,
+                            ),
+
+
 
                           Padding(
                             padding: const EdgeInsets.all(16.0),

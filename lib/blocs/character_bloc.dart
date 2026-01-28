@@ -26,44 +26,33 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       _currentType = event.type;
       _currentGender = event.gender;
       try{
-        final response = await characterService.getCharacters(page: 1,
-            name: _currentSearch,
-            status: _currentStatus,
-            species: _currentSpecies,
-            type: _currentType,
-            gender: _currentGender);
-        emit(CharacterSuccess(response.results, response.info.next == null, 1,
-            totalCount: response.results.length));
+        final response = await characterService.getCharacters(page: 1, name: _currentSearch, status: _currentStatus, species: _currentSpecies, type: _currentType, gender: _currentGender);
+        emit(CharacterSuccess(response.results, response.info.next == null, 1, totalCount: response.results.length));
       }catch(e){
         emit(CharacterFailure('Error fetching characters: ${e.toString()}'));
       }
     });
 
 
+
     on<CharacterLoadMore>((event, emit) async {
-      if (isFetching) return;
+        if (isFetching) return;
       final state = this.state;
 
       if (state is! CharacterSuccess || state.hasReachedMax) return;
-      isFetching = true;
+  isFetching = true;
 
       final nextPage = state.currentPage + 1;
       try {
-        final response = await characterService.getCharacters(page: nextPage,
-            name: _currentSearch,
-            status: _currentStatus,
-            species: _currentSpecies,
-            type: _currentType,
-            gender: _currentGender);
+        final response = await characterService.getCharacters(page: nextPage, name: _currentSearch, status: _currentStatus, species: _currentSpecies, type: _currentType, gender  : _currentGender);
         emit(CharacterSuccess([
           ...state.characters,
           ...response.results,
-        ], response.info.next == null, nextPage,
-            totalCount: state.characters.length));
+        ], response.info.next == null, nextPage, totalCount: state.characters.length));
       } catch (e) {
         print(e);
         emit(CharacterFailure('Error fetching characters: ${e.toString()}'));
-      } finally {
+      }finally{
         isFetching = false;
       }
     });

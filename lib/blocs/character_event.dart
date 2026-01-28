@@ -1,7 +1,7 @@
 part of 'character_bloc.dart';
 
 abstract class CharacterEvent extends Equatable {
-  const CharacterEvent();
+    const CharacterEvent();
 
 
   @override
@@ -14,13 +14,10 @@ class CharacterRequested extends CharacterEvent {
   final String? species;
   final String? type;
   final String? gender;
-
-  const CharacterRequested(
-      {this.name, this.status, this.species, this.type, this.gender});
+  const CharacterRequested({this.name, this.status, this.species, this.type, this.gender});
 
   @override
-  List<Object> get props =>
-      [name ?? '', status ?? '', species ?? '', type ?? '', gender ?? ''];
+  List<Object> get props => [name ?? '', status ?? '', species ?? '', type ?? '', gender ?? ''];
 }
 
 class CharacterLoadMore extends CharacterEvent {}
