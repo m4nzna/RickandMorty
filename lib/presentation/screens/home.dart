@@ -24,8 +24,20 @@ class _HomeState extends State<Home> {
 
   Timer? _debounce;
 
-  void onSearchNameChanged(String value) {
+  String? status;
+  String? species;
+  String? type;
 
+  String? gender;
+
+  void _cleanFilters() {
+    status = null;
+    species = null;
+    type = null;
+    gender = null;
+  }
+
+  void onSearchNameChanged(String value) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 700), () {
@@ -37,8 +49,7 @@ class _HomeState extends State<Home> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 700), () {
-      context.read<CharacterBloc>().add(CharacterRequested(species: value));
-      Navigator.pop(context);
+      species = value;
     });
   }
 
@@ -46,9 +57,26 @@ class _HomeState extends State<Home> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 700), () {
-      context.read<CharacterBloc>().add(CharacterRequested(type: value));
-      Navigator.pop(context);
+      type = value;
     });
+  }
+
+  void onSearchFilterChanged(
+    String status,
+    String species,
+    String type,
+    String gender,
+  ) {
+    context.read<CharacterBloc>().add(
+      CharacterRequested(
+        status: status,
+        species: species,
+        type: type,
+        gender: gender,
+      ),
+    );
+    _cleanFilters();
+    Navigator.pop(context);
   }
 
   @override
@@ -108,10 +136,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         onSelected: (StatusCharacter? value) {
-                          context.read<CharacterBloc>().add(
-                            CharacterRequested(status: value?.name ?? ''),
-                          );
-                          Navigator.pop(context);
+                          status = value?.name ?? '';
                         },
                         dropdownMenuEntries: [
                           DropdownMenuEntry(
@@ -138,20 +163,26 @@ class _HomeState extends State<Home> {
 
                             onChanged: (value) {
                               onSearchSpeciesChanged(value.toLowerCase());
-
                             },
                           ),
                         ),
-                        Tooltip(
-                          message: "Species example: Human, Alien",
-
-                          child: IconButton(
-                            icon: Icon(Icons.info, color: Theme.of(context).colorScheme.surface),
-                            onPressed: () {
-
-                            },
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.info,
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                        Expanded(
+                          child: Text(
+                            "Species example: Human, Alien",
+                            maxLines: 2,
+                            style: Theme.of(context).textTheme.bodySmall!.apply(
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     SizedBox(height: 16),
@@ -162,21 +193,26 @@ class _HomeState extends State<Home> {
                             hintText: 'Type',
                             onChanged: (value) {
                               onSearchTypeChanged(value.toLowerCase());
-
                             },
                           ),
-
                         ),
-                        Tooltip(
-                          message: "Type example: Parasite, Human with antennae, Superhuman",
-
-                          child: IconButton(
-                            icon: Icon(Icons.info, color: Theme.of(context).colorScheme.surface),
-                            onPressed: () {
-
-                            },
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.info,
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                        Expanded(
+                          child: Text(
+                            "Type example: Parasite, Human with antennae, Superhuman",
+                            maxLines: 2,
+                            style: Theme.of(context).textTheme.bodySmall!.apply(
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     SizedBox(height: 16),
@@ -194,10 +230,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         onSelected: (GenderCharacter? value) {
-                          context.read<CharacterBloc>().add(
-                            CharacterRequested(gender: value?.name ?? ''),
-                          );
-                          Navigator.pop(context);
+                          gender = value?.name ?? '';
                         },
                         dropdownMenuEntries: [
                           DropdownMenuEntry(
@@ -220,6 +253,32 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 24),
+                    Center(
+                      child: OutlinedButton(
+                        style: ButtonStyle(
+                          side: WidgetStateProperty.all(
+                            BorderSide(
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          onSearchFilterChanged(
+                            status ?? '',
+                            species ?? '',
+                            type ?? '',
+                            gender ?? '',
+                          );
+                        },
+                        child: Text(
+                          'Apply Filters',
+                          style: Theme.of(context).textTheme.titleMedium!.apply(
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -236,7 +295,6 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-
               Row(
                 children: [
                   Expanded(
@@ -247,19 +305,6 @@ class _HomeState extends State<Home> {
                       onChanged: (value) {
                         onSearchNameChanged(value);
                       },
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Text(
-                    context.select((CharacterBloc bloc) {
-                      final state = bloc.state;
-                      if (state is CharacterSuccess) {
-                        return '${state.totalCount}';
-                      }
-                      return '0';
-                    }),
-                    style: Theme.of(context).textTheme.titleMedium!.apply(
-                      color: Theme.of(context).colorScheme.tertiary,
                     ),
                   ),
                 ],
@@ -306,6 +351,15 @@ class _HomeState extends State<Home> {
                                   height: 200,
                                   width: 200,
                                 ),
+                          state.message.contains('There is nothing here')
+                              ? Text(
+                                  'There is nothing here',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                )
+                              : SizedBox.shrink(),
 
                           Padding(
                             padding: const EdgeInsets.all(16.0),

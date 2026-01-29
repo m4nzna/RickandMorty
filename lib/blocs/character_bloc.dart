@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rick_and_morty/models/character_model.dart';
 
@@ -56,6 +55,8 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       isFetching = true;
 
       final nextPage = state.currentPage + 1;
+      await Future.delayed(const Duration(milliseconds: 500));
+
       try {
         final response = await characterService.getCharacters(
           page: nextPage,
