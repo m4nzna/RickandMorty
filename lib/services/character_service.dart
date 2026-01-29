@@ -31,9 +31,11 @@ class CharacterService {
       );
 
       final data = response.data;
-
-      if (data is Map<String, dynamic> && data.containsKey('error')) {
-        throw Exception(data['error']);
+      if (data is! Map<String, dynamic>) {
+        throw Exception('Invalid response format');
+      }
+      if (!data.containsKey('results')) {
+        throw Exception(data['error'] ?? 'No results');
       }
 
       return Character.fromJson(data);

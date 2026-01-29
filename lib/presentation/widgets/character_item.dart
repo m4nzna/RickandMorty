@@ -46,16 +46,24 @@ class CharacterItem extends StatelessWidget {
               ),
             ],
           ),
-          CachedNetworkImage(
-            height: 100,
-            width: 100,
-            fit: BoxFit.cover,
-            imageUrl: character.image,
-            placeholder: (context, url) =>
-                Center(child: CircularProgressIndicator()),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-            fadeInDuration: Duration(milliseconds: 300),
-          ),
+          if (character.image.isNotEmpty)
+            CachedNetworkImage(
+              height: 100,
+              width: 100,
+              fit: BoxFit.cover,
+              imageUrl: character.image,
+              placeholder: (context, url) =>
+              SizedBox(height:50,width:50,child: const CircularProgressIndicator.adaptive()),
+              errorWidget: (context, url, error) =>
+              const Icon(Icons.broken_image),
+            )
+          else
+            const Icon(
+              Icons.person,
+              size: 100,
+              color: Colors.grey,
+            ),
+
         ],
       ),
     );

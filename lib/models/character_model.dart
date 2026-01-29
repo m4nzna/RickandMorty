@@ -113,18 +113,24 @@ class Result {
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["id"],
-    name: json["name"],
-    status: json["status"]!,
-    species: json["species"],
-    type: json["type"],
-    gender: json["gender"]!,
+    name: json["name"] ?? '',
+    status: json["status"] ?? 'unknown',
+    species: json["species"] ?? '',
+    type: json["type"] ?? '',
+    gender: json["gender"] ?? 'unknown',
     origin: Location.fromJson(json["origin"]),
     location: Location.fromJson(json["location"]),
-    image: json["image"],
-    episode: List<String>.from(json["episode"].map((x) => x)),
-    url: json["url"],
+    image: json["image"] is String && json["image"].isNotEmpty
+        ? json["image"]
+        : '',
+
+    episode: json["episode"] is List
+        ? List<String>.from(json["episode"])
+        : [],
+    url: json["url"] ?? '',
     created: DateTime.parse(json["created"]),
   );
+
 
   Map<String, dynamic> toJson() => {
     "id": id,

@@ -48,6 +48,7 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     });
 
     on<CharacterLoadMore>((event, emit) async {
+
       if (isFetching) return;
       final state = this.state;
 
@@ -56,7 +57,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
 
       final nextPage = state.currentPage + 1;
       await Future.delayed(const Duration(milliseconds: 500));
-
       try {
         final response = await characterService.getCharacters(
           page: nextPage,
@@ -75,6 +75,7 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
           ),
         );
       } catch (e) {
+        print(e);
         emit(CharacterFailure('Error fetching characters: ${e.toString()}'));
       } finally {
         isFetching = false;

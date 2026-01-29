@@ -103,189 +103,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text('Rick and Morty'), actions: []),
-      drawer: Drawer(
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-        child: Stack(
-          children: [
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      'FIND BY...',
-                      style: Theme.of(context).textTheme.titleLarge!.apply(
-                        color: Theme.of(context).colorScheme.surface,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).colorScheme.surface,
-                      ),
-
-                      child: DropdownMenu(
-                        label: Text('Status'),
-                        width: double.infinity,
-                        menuStyle: MenuStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Theme.of(context).colorScheme.surface,
-                          ),
-                        ),
-                        onSelected: (StatusCharacter? value) {
-                          status = value?.name ?? '';
-                        },
-                        dropdownMenuEntries: [
-                          DropdownMenuEntry(
-                            value: StatusCharacter.alive,
-                            label: 'Alive',
-                          ),
-                          DropdownMenuEntry(
-                            value: StatusCharacter.dead,
-                            label: 'Dead',
-                          ),
-                          DropdownMenuEntry(
-                            value: StatusCharacter.unknown,
-                            label: 'Unknown',
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SearchBar(
-                            hintText: 'Species',
-
-                            onChanged: (value) {
-                              onSearchSpeciesChanged(value.toLowerCase());
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.info,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Species example: Human, Alien",
-                            maxLines: 2,
-                            style: Theme.of(context).textTheme.bodySmall!.apply(
-                              color: Theme.of(context).colorScheme.surface,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SearchBar(
-                            hintText: 'Type',
-                            onChanged: (value) {
-                              onSearchTypeChanged(value.toLowerCase());
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.info,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Type example: Parasite, Human with antennae, Superhuman",
-                            maxLines: 2,
-                            style: Theme.of(context).textTheme.bodySmall!.apply(
-                              color: Theme.of(context).colorScheme.surface,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).colorScheme.surface,
-                      ),
-                      child: DropdownMenu(
-                        label: Text('Gender'),
-                        width: double.infinity,
-                        menuStyle: MenuStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Theme.of(context).colorScheme.surface,
-                          ),
-                        ),
-                        onSelected: (GenderCharacter? value) {
-                          gender = value?.name ?? '';
-                        },
-                        dropdownMenuEntries: [
-                          DropdownMenuEntry(
-                            value: GenderCharacter.female,
-                            label: 'Female',
-                          ),
-                          DropdownMenuEntry(
-                            value: GenderCharacter.male,
-                            label: 'Male',
-                          ),
-                          DropdownMenuEntry(
-                            value: GenderCharacter.genderless,
-                            label: 'Genderless',
-                          ),
-
-                          DropdownMenuEntry(
-                            value: GenderCharacter.unknown,
-                            label: 'Unknown',
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 24),
-                    Center(
-                      child: OutlinedButton(
-                        style: ButtonStyle(
-                          side: WidgetStateProperty.all(
-                            BorderSide(
-                              color: Theme.of(context).colorScheme.surface,
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          onSearchFilterChanged(
-                            status ?? '',
-                            species ?? '',
-                            type ?? '',
-                            gender ?? '',
-                          );
-                        },
-                        child: Text(
-                          'Apply Filters',
-                          style: Theme.of(context).textTheme.titleMedium!.apply(
-                            color: Theme.of(context).colorScheme.surface,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      drawer: buildDrawer(context),
 
       body: RefreshIndicator(
         onRefresh: () async {
@@ -383,6 +201,192 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Drawer buildDrawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: Theme.of(context).colorScheme.tertiary,
+      child: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'FIND BY...',
+                    style: Theme.of(context).textTheme.titleLarge!.apply(
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
+
+                    child: DropdownMenu(
+                      label: Text('Status'),
+                      width: double.infinity,
+                      menuStyle: MenuStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Theme.of(context).colorScheme.surface,
+                        ),
+                      ),
+                      onSelected: (StatusCharacter? value) {
+                        status = value?.name ?? '';
+                      },
+                      dropdownMenuEntries: [
+                        DropdownMenuEntry(
+                          value: StatusCharacter.alive,
+                          label: 'Alive',
+                        ),
+                        DropdownMenuEntry(
+                          value: StatusCharacter.dead,
+                          label: 'Dead',
+                        ),
+                        DropdownMenuEntry(
+                          value: StatusCharacter.unknown,
+                          label: 'Unknown',
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SearchBar(
+                          hintText: 'Species',
+
+                          onChanged: (value) {
+                            onSearchSpeciesChanged(value.toLowerCase());
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.info,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Species example: Human, Alien",
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.bodySmall!.apply(
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SearchBar(
+                          hintText: 'Type',
+                          onChanged: (value) {
+                            onSearchTypeChanged(value.toLowerCase());
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.info,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Type example: Parasite, Human with antennae, Superhuman",
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.bodySmall!.apply(
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
+                    child: DropdownMenu(
+                      label: Text('Gender'),
+                      width: double.infinity,
+                      menuStyle: MenuStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Theme.of(context).colorScheme.surface,
+                        ),
+                      ),
+                      onSelected: (GenderCharacter? value) {
+                        gender = value?.name ?? '';
+                      },
+                      dropdownMenuEntries: [
+                        DropdownMenuEntry(
+                          value: GenderCharacter.female,
+                          label: 'Female',
+                        ),
+                        DropdownMenuEntry(
+                          value: GenderCharacter.male,
+                          label: 'Male',
+                        ),
+                        DropdownMenuEntry(
+                          value: GenderCharacter.genderless,
+                          label: 'Genderless',
+                        ),
+
+                        DropdownMenuEntry(
+                          value: GenderCharacter.unknown,
+                          label: 'Unknown',
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Center(
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                        side: WidgetStateProperty.all(
+                          BorderSide(
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        onSearchFilterChanged(
+                          status ?? '',
+                          species ?? '',
+                          type ?? '',
+                          gender ?? '',
+                        );
+                      },
+                      child: Text(
+                        'Apply Filters',
+                        style: Theme.of(context).textTheme.titleMedium!.apply(
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
