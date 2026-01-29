@@ -93,6 +93,7 @@ class _HomeState extends State<Home> {
         _scrollController.position.maxScrollExtent - 200) {
       final state = context.read<CharacterBloc>().state;
       if (state is CharacterSuccess && !state.hasReachedMax) {
+        await Future.delayed(const Duration(milliseconds: 500));
         context.read<CharacterBloc>().add(CharacterLoadMore());
       }
     }
